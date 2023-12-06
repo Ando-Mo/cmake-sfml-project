@@ -383,7 +383,7 @@ int main()
 			
 			//CPU Controller
 			if(gameMode == TwoPlayerMode){
-				//if ball has bounced off p1 && 
+				//if ball has bounced off p1
 					//if period of human reaction time finished
 						//target_pos = (ball.pos.y + some offset) 
 						
@@ -400,13 +400,18 @@ int main()
 			if (ball.getShape().getGlobalBounds().intersects(paddle1.getShape().getGlobalBounds()) || 
 				ball.getShape().getGlobalBounds().intersects(paddle2.getShape().getGlobalBounds())){
 				if(!paddleTouch){
+					//reverse x velocity if you hit bottom half (MAYBE you can divide getGlobalBounds and manually check??)
 					std::cout<< "Hit Paddle" << std::endl;
 					ball.velocity.x *= -1;
+					//reverse x and y velocity if you hit the top half
+
+					//speed up the ball
 					if(ball.velocity.x > 0){
 						ball.velocity.x += addVelocity;
 					} else{
 						ball.velocity.x -= addVelocity;
 					}
+					//slightly randomize the return y velocity 
 				}
 				paddleTouch = true; //these bools help to ensure that only 1 collision happens
 			}else{
