@@ -372,7 +372,7 @@ int main()
 			}
 
 			//Player 2 Controller (up and down) ----- NO LIMITS
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && gameMode == TwoPlayerMode) {
 				paddle2.update(dt, -1);
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
