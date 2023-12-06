@@ -381,6 +381,20 @@ int main()
 
 			ball.update(dt);
 			
+			//CPU Controller
+			if(gameMode == TwoPlayerMode){
+				//if ball has bounced off p1 && 
+					//if period of human reaction time finished
+						//target_pos = (ball.pos.y + some offset) 
+						
+						//if paddle.pos.y < target_pos
+							//paddle2.update(dt, 1);
+						//else if paddle.pos.y > target_pos
+							//paddle2.update(dt, -1);
+					//else if player reaction time isn't finished 
+						//reduce player reaction time by dt
+			}
+
 			//PADDLE COLLISION -> REVERSE X VELOCITY
 			int addVelocity = 25;
 			if (ball.getShape().getGlobalBounds().intersects(paddle1.getShape().getGlobalBounds()) || 
