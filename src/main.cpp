@@ -211,7 +211,7 @@ int main()
     int p2Score = 0; 
 
     auto ballSize = sf::Vector2f(20, 20);
-    auto ballPos = sf::Vector2f(400, 450);
+    auto ballPos = sf::Vector2f(480, 450);
 	auto ballVelocity = sf::Vector2f(200, 100);
     auto ballColor = sf::Color::White;
     Ball ball = Ball(ballSize, ballPos, ballVelocity, ballColor);
@@ -230,7 +230,7 @@ int main()
     Wall leftWall = Wall(sf::Vector2f(50, 800), sf::Vector2f(50, 0), sf::Color::Green); 
     Wall rightWall = Wall(sf::Vector2f(50, 800), sf::Vector2f(900, 0), sf::Color::Green); 
 
-	Wall flashSquare = Wall(sf::Vector2f(1000, 1000), sf::Vector2f(0, 0), sf::Color::White);
+	Wall flashSquare = Wall(sf::Vector2f(1000, 100), sf::Vector2f(0, 0), sf::Color::Yellow);
 	float flashTime = 1.0f;
 
     bool paddleTouch = false;
@@ -239,6 +239,10 @@ int main()
     bool rightWallTouch = false;
 
 	bool paused = false;
+
+	bool playerJustHitBall = false;
+	float CPUReactionTime = 0.5f;
+	float targetPos;
 
 	sf::Texture Menu1_tex;
 	if(!Menu1_tex.loadFromFile("../../../start_menu1.png")){
@@ -327,7 +331,14 @@ int main()
 			}
 			//Determine Velocity Y
 			srand(rand());
-			ball.velocity.y = (rand() % 400) - 200;
+			int choice = rand() % 2;
+			if(choice == 0){
+				ball.velocity.y = 80;
+			}
+			else if (choice == 1){
+				ball.velocity.y = -80;
+			}
+			
 			std::cout << "LAUNCH VELOCITY: " << ball.velocity.y << std::endl;
 
 			//Reset Paddle Positions
@@ -364,35 +375,51 @@ int main()
 			//PLAYER INPUT-------------------------------------
 
 			//Player 1 Controller (up and down) ----- NO LIMITS
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) 
+			&& paddle1.pos.y > 140) {
 				paddle1.update(dt, -1);
 			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)
+			&& paddle1.pos.y < 680) {
 				paddle1.update(dt, 1);
 			}
 
 			//Player 2 Controller (up and down) ----- NO LIMITS
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && gameMode == TwoPlayerMode) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) 
+			&& gameMode == TwoPlayerMode
+			&& paddle2.pos.y > 140) {
 				paddle2.update(dt, -1);
 			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) 
+			&& gameMode == TwoPlayerMode
+			&& paddle2.pos.y < 680) {
 				paddle2.update(dt, 1);
 			}
 
 			ball.update(dt);
 			
 			//CPU Controller
-			if(gameMode == TwoPlayerMode){
-				//if ball has bounced off p1
-					//if period of human reaction time finished
-						//target_pos = (ball.pos.y + some offset) 
-						
-						//if paddle.pos.y < target_pos
-							//paddle2.update(dt, 1);
-						//else if paddle.pos.y > target_pos
-							//paddle2.update(dt, -1);
-					//else if player reaction time isn't finished 
-						//reduce player reaction time by dt
+			if(gameMode == OnePlayerMode){
+				if(playerJustHitBall){ //if the player hit the ball
+					targetPos = ball.pos.y; //PLUS SOME OFFSET
+					if(CPUReactionTime <= 0){ //if the CPU has finished waiting
+						if (paddle2.pos.y + 80 < targetPos){
+							paddle2.update(dt, 1);
+						}
+						else if (paddle2.pos.y + 10 > targetPos){
+							paddle2.update(dt, -1);
+						}
+					}
+					else{ //if the CPU needs to wait longer
+						CPUReactionTime -= dt;
+						if(CPUReactionTime <= 0){ //this should only trigger once every time the CPU needs to hit
+
+						}
+					}
+				}
+				else{ //if the player hasn't hit the ball 
+					CPUReactionTime = 0.32f;
+				}
 			}
 
 			//PADDLE COLLISION -> REVERSE X VELOCITY
@@ -401,7 +428,14 @@ int main()
 				ball.getShape().getGlobalBounds().intersects(paddle2.getShape().getGlobalBounds())){
 				if(!paddleTouch){
 					//reverse x velocity if you hit bottom half (MAYBE you can divide getGlobalBounds and manually check??)
-					std::cout<< "Hit Paddle" << std::endl;
+					if(ball.getShape().getGlobalBounds().intersects(paddle1.getShape().getGlobalBounds())){
+						std::cout<< "Hit Paddle 1" << std::endl;
+						playerJustHitBall = true;
+					}
+					if(ball.getShape().getGlobalBounds().intersects(paddle2.getShape().getGlobalBounds())){
+						std::cout<< "Hit Paddle 2" << std::endl;
+						playerJustHitBall = false;
+					}
 					ball.velocity.x *= -1;
 					//reverse x and y velocity if you hit the top half
 
@@ -459,21 +493,39 @@ int main()
 		
 
 		//DRAW CALLS-------------------------------------
-		window.draw(p1Score_Display);
-		window.draw(p2Score_Display);
+		
 
 		window.draw(ball.getShape());
 
         window.draw(paddle1.getShape());
         window.draw(paddle2.getShape());
 
+		window.draw(leftWall.getShape());
+        window.draw(rightWall.getShape());
         window.draw(upWall.getShape());
         window.draw(downWall.getShape());
-        window.draw(leftWall.getShape());
-        window.draw(rightWall.getShape());
         
+        if(gameState == ball_moving_regular_gameplay){
+			window.draw(p1Score_Display);
+			window.draw(p2Score_Display);
+		}
+
 		if(gameState == ball_hit_wall_so_flash && flashTime > 0){
-			window.draw(flashSquare.getShape());
+			ball.pos = ballPos;
+			if(flashTime > 0.8){ //std::fmod(flashTime, 0.5f) == 1
+				window.draw(p1Score_Display);
+				window.draw(p2Score_Display);
+			}
+			else if (flashTime > 0.6){
+
+			}
+			else if (flashTime > 0.4){
+				window.draw(p1Score_Display);
+				window.draw(p2Score_Display);
+			}
+			else if (flashTime > 0.2){
+
+			}
 			flashTime -= dt;
 		}
 		else if(!(flashTime > 0)){
