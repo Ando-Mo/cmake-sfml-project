@@ -34,7 +34,7 @@ int32_t main(int32_t, char*[])
     Renderer renderer{window};
 
     // Solver configuration
-    solver.setConstraint({static_cast<float>(window_width) * 0.5f, static_cast<float>(window_height) * 0.5f}, {400.0f, 400.0f});
+    solver.setConstraint({static_cast<float>(window_width) * 0.5f, static_cast<float>(window_height) * 0.5f}, {100.0f, 100.0f});
     solver.setSubStepsCount(8);
     solver.setSimulationUpdateRate(frame_rate);
 

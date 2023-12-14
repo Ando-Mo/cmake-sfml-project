@@ -19,7 +19,7 @@ public:
         const sf::Vector2f constraint_dim = solver.getConstraintDim();
 
         sf::RectangleShape constraint_background{sf::Vector2f(constraint_dim.x, constraint_dim.y)};
-        constraint_background.setOrigin(constraint_dim.x/2, constraint_dim.y/2);
+        //constraint_background.setOrigin(constraint_dim.x/2, constraint_dim.y/2);
         constraint_background.setFillColor(sf::Color::Black);
         constraint_background.setPosition(constraint_pos.x, constraint_pos.y);
         //constraint_background.setPointCount(128);

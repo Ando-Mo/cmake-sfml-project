@@ -185,11 +185,53 @@ private:
     void applyConstraint()
     {
         for (auto& obj : m_objects) {//for all spawned objects
-            const sf::Vector2f to_obj = m_constraint_center - obj.position;//find distance by subtracting the two position vector
-            const float dist = sqrt(to_obj.x * to_obj.x + to_obj.y * to_obj.y); //and using distance formula to find the number
-            if (dist > (m_constraint_radius - obj.radius)) { //if object is inside of the circle
-                const sf::Vector2f n = to_obj / dist;
-                obj.position = m_constraint_center - n * (m_constraint_radius - obj.radius);//determine how much to push the object back into constraint
+            // //ball to ball-------------------------------------------------
+            // const sf::Vector2f to_obj = m_constraint_center - obj.position;//find distance by subtracting the two position vector
+            // const float dist = sqrt(to_obj.x * to_obj.x + to_obj.y * to_obj.y); //and using distance formula to find the number
+            // if (dist > (m_constraint_radius - obj.radius)) { //if object is inside of the circle
+            //     const sf::Vector2f n = to_obj / dist;
+            //     obj.position = m_constraint_center - n * (m_constraint_radius - obj.radius);//determine how much to push the object back into constraint
+            // }
+
+            //ball to rect--------------------------------------------------
+            float testX = obj.position.x;
+            float testY = obj.position.y;
+
+            // which edge is closest?
+            //if (cx < rx)         testX = rx;      // test left edge
+            if(obj.position.x < m_constraint_center.x){ 
+                testX = m_constraint_center.x;
+            }
+            //else if (cx > rx+rw) testX = rx+rw;   // right edge
+            else if (obj.position.x > m_constraint_center.x + m_constraint_dimensions.x){
+                testX = m_constraint_center.x + m_constraint_dimensions.x;
+            }
+            //if (cy < ry)         testY = ry;      // top edge
+            if(obj.position.y < m_constraint_center.y){
+                testY = m_constraint_center.y;
+            }
+            //else if (cy > ry+rh) testY = ry+rh;   // bottom edge
+            else if (obj.position.y > m_constraint_center.y + m_constraint_dimensions.y){
+                testY = m_constraint_center.y + m_constraint_dimensions.y;
+            }
+            // get distance from closest edges
+            //float distX = cx-testX;
+            //float distY = cy-testY;
+            const sf::Vector2f to_obj = {obj.position.x - testX, obj.position.y - testY};
+            //float distance = sqrt( (distX*distX) + (distY*distY) );
+            float distance = sqrt(to_obj.x * to_obj.x + to_obj.y * to_obj.y);
+
+            const float distLeft = fabs(to_obj.x) - (m_constraint_dimensions.x / 2.0f);
+            const float distRight = (m_constraint_dimensions.x / 2.0f) - fabs(to_obj.x);
+            const float distTop = fabs(to_obj.y) - (m_constraint_dimensions.y / 2.0f);
+            const float distBottom = (m_constraint_dimensions.y / 2.0f) - fabs(to_obj.y);
+
+
+
+            //if distance is less than the radius, collision! 
+            if(distance <= obj.radius){
+                const sf::Vector2f n = to_obj / distance;
+                obj.position = m_constraint_center - n /** (which ever side you hit -    obj.radius)*/; //determine how much to push the object back into constraint
             }
         }
     }
