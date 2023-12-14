@@ -23,15 +23,6 @@ public:
 	sf::Vector2f size;
 	sf::Color color;
 
-	Paddle() {
-		size = sf::Vector2f(15, 120);
-
-		pos = sf::Vector2f(300, 250);
-		velocity = sf::Vector2f(0, 0);
-
-		color = sf::Color::Yellow;
-	}
-
 	Paddle(sf::Vector2f newSize, sf::Vector2f initPos, sf::Vector2f initVelocity, sf::Color newCol) {
 		this->pos = initPos;
 		this->velocity = initVelocity;
@@ -50,6 +41,20 @@ public:
 	void update(float dt, float dir) {
 		pos += ((velocity * dir) * dt);
 	}
+};
+
+enum FruitType{
+    cherry, 
+    //strawberry, 
+    //grape, 
+    //tangerine, 
+    orange, 
+    apple, 
+    //pear, 
+    //peach, 
+    //pineapple, 
+    melon, 
+    suika
 };
 
 int32_t main(int32_t, char*[])
@@ -76,11 +81,22 @@ int32_t main(int32_t, char*[])
     // Set simulation attributes
     const float        object_spawn_delay    = 0.025f;
     const float        object_spawn_speed    = 100.0f;
-    const sf::Vector2f object_spawn_position = {500.0f, 200.0f};
-    const float        object_min_radius     = 1.0f;
-    const float        object_max_radius     = 20.0f;
     const uint32_t     max_objects_count     = 1000;
     const float        max_angle             = 1.0f;
+
+    //FRUIT ATTRIBUTES----------
+    //size
+    const float        cherry_r         = 20.0f;
+    const float        orange_r         = 40.0f;
+    const float        apple_r          = 60.0f;
+    const float        melon_r          = 80.0f;
+    const float        suika_r          = 100.0f;
+    //color
+    const auto         cherry_c         = sf::Color::Red;
+    const auto         orange_c         = sf::Color::Color(255, 165, 0); //orange
+    const auto         apple_c         = sf::Color::Red;
+    const auto         melon_c         = sf::Color::Green;
+    const auto         suika_c         = sf::Color::Cyan;
 
     //Set paddle config
     auto paddleSize = sf::Vector2f(50, 20);
@@ -91,11 +107,15 @@ int32_t main(int32_t, char*[])
     Paddle paddle1 = Paddle(paddleSize, paddle1_pos, paddleVelocity, paddleColor);
 
     //Set player config
-    float dropDelay = 0.3f;
-    float delayTime = dropDelay;
-    bool isDropped = false;
+    float dropDelay = 0.6f; //amount of time between each drop
+    float delayTime = dropDelay; //temp variable that iterates down
+    bool isDropped = false; //did the player press the drop button or not?
 
+    //General System config
     sf::Clock clock;
+    sf::Time dt_time;
+    float dt;
+
     // Main loop
     while (window.isOpen()) {
         sf::Event event{};
@@ -105,27 +125,25 @@ int32_t main(int32_t, char*[])
             }
         }
 
-        sf::Time dt_time = clock.restart();
-		float dt = dt_time.asSeconds();
+        dt_time = clock.restart();
+		dt = dt_time.asSeconds();
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) 
-			/*&& paddle1.pos.y > 140*/) { 
-				paddle1.update(dt, -1);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) /*&& paddle1.pos.y > 140*/) { 
+			paddle1.update(dt, -1);
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)
-			/*&& paddle1.pos.y < 680*/) {
-				paddle1.update(dt, 1);
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)/*&& paddle1.pos.y < 680*/) {
+			paddle1.update(dt, 1);
 		}
 
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){ 
             if(!isDropped){
-                auto& object = solver.addObject(paddle1.pos, object_max_radius);
+                auto& object = solver.addObject(paddle1.pos, object_radius);
                 solver.setObjectVelocity(object, object_spawn_speed * sf::Vector2f{0, 1});
 
                 isDropped = true;
             }
         }
-        if(isDropped){
+        if(isDropped){ //the delay that prevents players from spam dropping
             if(delayTime > 0){
                 delayTime -= dt;
             }
@@ -135,14 +153,14 @@ int32_t main(int32_t, char*[])
             }
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && solver.getObjectsCount() < max_objects_count && clock.getElapsedTime().asSeconds() >= object_spawn_delay) {
-            clock.restart();
-            auto&       object = solver.addObject(object_spawn_position, RNGf::getRange(object_min_radius, object_max_radius)); //spawn object
-            const float t      = solver.getTime();
-            const float angle  = max_angle * sin(t) + Math::PI * 0.5f; //angle based on sin wave along time t
-            solver.setObjectVelocity(object, object_spawn_speed * sf::Vector2f{cos(angle), sin(angle)});
-            object.color = getRainbow(t);
-        }
+        // if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && solver.getObjectsCount() < max_objects_count && clock.getElapsedTime().asSeconds() >= object_spawn_delay) {
+        //     clock.restart();
+        //     auto&       object = solver.addObject(object_spawn_position, RNGf::getRange(object_min_radius, object_max_radius)); //spawn object
+        //     const float t      = solver.getTime();
+        //     const float angle  = max_angle * sin(t) + Math::PI * 0.5f; //angle based on sin wave along time t
+        //     solver.setObjectVelocity(object, object_spawn_speed * sf::Vector2f{cos(angle), sin(angle)});
+        //     object.color = getRainbow(t);
+        // }
 
         solver.update();
         window.clear(sf::Color::White);

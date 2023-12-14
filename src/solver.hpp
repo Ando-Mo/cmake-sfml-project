@@ -156,7 +156,6 @@ private:
     //constraint defined
     sf::Vector2f              m_constraint_center;
     sf::Vector2f              m_constraint_dimensions;
-    float                     m_constraint_radius  = 100.0f;
     std::vector<VerletObject> m_objects;
     float                     m_time               = 0.0f;
     float                     m_frame_dt           = 0.0f;
@@ -188,6 +187,11 @@ private:
                     const float mass_ratio_1 = object_1.radius / (object_1.radius + object_2.radius);
                     const float mass_ratio_2 = object_2.radius / (object_1.radius + object_2.radius);
                     const float delta        = 0.5f * response_coef * (dist - min_dist);
+                    
+                    //Update color <--- this actually works but is getting overridden
+                    object_1.color = sf::Color::Yellow;
+                    object_2.color = sf::Color::Yellow;
+
                     // Update positions
                     object_1.position -= n * (mass_ratio_2 * delta);
                     object_2.position += n * (mass_ratio_1 * delta);
