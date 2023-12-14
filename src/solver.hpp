@@ -249,9 +249,8 @@ private:
                 obj.color = sf::Color::Blue;
                 sf::Vector2f n = to_obj / distance;
                 //n * (whatever side you hit - radius)
-                obj.position = obj.position - n * (distance - obj.radius); //* (collideSide - obj.radius) determine how much to push the object back into constraint
+                obj.position = obj.position - n * (distance - obj.radius); //* the new position is the normal vector, reversed, multiplied by the overlap of the circle onto the square
             }
-            
         }
     }
 

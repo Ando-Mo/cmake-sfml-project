@@ -16,6 +16,41 @@ static sf::Color getRainbow(float t)
             static_cast<uint8_t>(255.0f * b * b)};
 }
 
+class Paddle {
+public:
+	sf::Vector2f pos;
+	sf::Vector2f velocity;
+	sf::Vector2f size;
+	sf::Color color;
+
+	Paddle() {
+		size = sf::Vector2f(15, 120);
+
+		pos = sf::Vector2f(300, 250);
+		velocity = sf::Vector2f(0, 0);
+
+		color = sf::Color::Yellow;
+	}
+
+	Paddle(sf::Vector2f newSize, sf::Vector2f initPos, sf::Vector2f initVelocity, sf::Color newCol) {
+		this->pos = initPos;
+		this->velocity = initVelocity;
+		this->size = newSize;
+		this->color = newCol;
+	}
+
+	sf::RectangleShape getShape() {
+		auto shape = sf::RectangleShape();
+		shape.setSize(size);
+		shape.setPosition(pos);
+		shape.setFillColor(color);
+		return shape;
+	}
+
+	void update(float dt, float dir) {
+		pos += ((velocity * dir) * dt);
+	}
+};
 
 int32_t main(int32_t, char*[])
 {
@@ -47,6 +82,14 @@ int32_t main(int32_t, char*[])
     const uint32_t     max_objects_count     = 1000;
     const float        max_angle             = 1.0f;
 
+    //Set paddle config
+    auto paddleSize = sf::Vector2f(50, 20);
+    auto paddleVelocity = sf::Vector2f(200, 0);
+    auto paddleColor = sf::Color::Red;
+	sf::Vector2f paddle1_pos = {static_cast<float>(window_width) * 0.1f, static_cast<float>(window_height) * 0.1f};
+
+    Paddle paddle1 = Paddle(paddleSize, paddle1_pos, paddleVelocity, paddleColor);
+
     sf::Clock clock;
     // Main loop
     while (window.isOpen()) {
@@ -56,6 +99,18 @@ int32_t main(int32_t, char*[])
                 window.close();
             }
         }
+
+        sf::Time dt_time = clock.restart();
+		float dt = dt_time.asSeconds();
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) 
+			/*&& paddle1.pos.y > 140*/) { 
+				paddle1.update(dt, -1);
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)
+			/*&& paddle1.pos.y < 680*/) {
+				paddle1.update(dt, 1);
+		}
 
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){ //player presses down and can drop balls (but they stack on top of each other because they're at exact same x position)
             auto& object = solver.addObject(object_spawn_position, object_max_radius);
@@ -74,6 +129,7 @@ int32_t main(int32_t, char*[])
         solver.update();
         window.clear(sf::Color::White);
         renderer.render(solver);
+        window.draw(paddle1.getShape());
 		window.display();
     }
 
