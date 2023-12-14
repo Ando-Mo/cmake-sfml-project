@@ -25,11 +25,12 @@ int32_t main(int32_t, char*[])
 
     sf::ContextSettings settings;
     settings.antialiasingLevel = 1;
-    sf::RenderWindow window(sf::VideoMode(window_width, window_height), "Verlet", sf::Style::Default, settings);
+
+    sf::RenderWindow window(sf::VideoMode(window_width, window_height), "SUIKA GAME", sf::Style::Default, settings);
     const uint32_t frame_rate = 60;
     window.setFramerateLimit(frame_rate);
 
-    Solver   solver;
+    Solver solver;
     Renderer renderer{window};
 
     // Solver configuration
@@ -56,11 +57,16 @@ int32_t main(int32_t, char*[])
             }
         }
 
-        if (solver.getObjectsCount() < max_objects_count && clock.getElapsedTime().asSeconds() >= object_spawn_delay) {
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){ //player presses down and can drop balls (but they stack on top of each other)
+            auto& object = solver.addObject(object_spawn_position, object_max_radius);
+            solver.setObjectVelocity(object, object_spawn_speed * sf::Vector2f{0, 1});
+        }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && solver.getObjectsCount() < max_objects_count && clock.getElapsedTime().asSeconds() >= object_spawn_delay) {
             clock.restart();
-            auto&       object = solver.addObject(object_spawn_position, RNGf::getRange(object_min_radius, object_max_radius));
+            auto&       object = solver.addObject(object_spawn_position, RNGf::getRange(object_min_radius, object_max_radius)); //spawn object
             const float t      = solver.getTime();
-            const float angle  = max_angle * sin(t) + Math::PI * 0.5f;
+            const float angle  = max_angle * sin(t) + Math::PI * 0.5f; //angle based on sin wave along time t
             solver.setObjectVelocity(object, object_spawn_speed * sf::Vector2f{cos(angle), sin(angle)});
             object.color = getRainbow(t);
         }

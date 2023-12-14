@@ -11,24 +11,25 @@ struct VerletObject
     sf::Vector2f position;
     sf::Vector2f position_last;
     sf::Vector2f acceleration;
-    float        radius        = 10.0f;
-    sf::Color    color         = sf::Color::White;
+
+    float radius = 10.0f;
+    sf::Color color = sf::Color::White;
 
     VerletObject() = default;
-    VerletObject(sf::Vector2f position_, float radius_)
-        : position{position_}
-        , position_last{position_}
-        , acceleration{0.0f, 0.0f}
-        , radius{radius_}
-    {}
+    VerletObject(sf::Vector2f position_, float radius_): 
+        position{position_},
+        position_last{position_},
+        acceleration{0.0f, 0.0f},
+        radius{radius_}{}
 
     void update(float dt)
     {
         // Compute how much we moved
-        const sf::Vector2f displacement = position - position_last;
-        // Update position
+        const sf::Vector2f velocity = position - position_last;
+        // Save current position
         position_last = position;
-        position      = position + displacement + acceleration * (dt * dt);
+        //Verlet integration
+        position = position + velocity + acceleration * (dt * dt);
         // Reset acceleration
         acceleration  = {};
     }
@@ -132,6 +133,7 @@ public:
 private:
     uint32_t                  m_sub_steps          = 1;
     sf::Vector2f              m_gravity            = {0.0f, 1000.0f};
+    //constraint defined
     sf::Vector2f              m_constraint_center;
     float                     m_constraint_radius  = 100.0f;
     std::vector<VerletObject> m_objects;
@@ -169,18 +171,18 @@ private:
                     object_1.position -= n * (mass_ratio_2 * delta);
                     object_2.position += n * (mass_ratio_1 * delta);
                 }
-            }
+            } 
         }
     }
 
     void applyConstraint()
     {
-        for (auto& obj : m_objects) {
-            const sf::Vector2f v    = m_constraint_center - obj.position;
-            const float        dist = sqrt(v.x * v.x + v.y * v.y);
-            if (dist > (m_constraint_radius - obj.radius)) {
-                const sf::Vector2f n = v / dist;
-                obj.position = m_constraint_center - n * (m_constraint_radius - obj.radius);
+        for (auto& obj : m_objects) {//for all spawned objects
+            const sf::Vector2f to_obj = m_constraint_center - obj.position;//find distance by subtracting the two position vector
+            const float dist = sqrt(to_obj.x * to_obj.x + to_obj.y * to_obj.y); //and using distance formula to find the number
+            if (dist > (m_constraint_radius - obj.radius)) { //if object is inside of the circle
+                const sf::Vector2f n = to_obj / dist;
+                obj.position = m_constraint_center - n * (m_constraint_radius - obj.radius);//determine how much to push the object back into constraint
             }
         }
     }
