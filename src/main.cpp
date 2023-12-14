@@ -75,7 +75,7 @@ int32_t main(int32_t, char*[])
 
     // Set simulation attributes
     const float        object_spawn_delay    = 0.025f;
-    const float        object_spawn_speed    = 1200.0f;
+    const float        object_spawn_speed    = 100.0f;
     const sf::Vector2f object_spawn_position = {500.0f, 200.0f};
     const float        object_min_radius     = 1.0f;
     const float        object_max_radius     = 20.0f;
@@ -89,6 +89,11 @@ int32_t main(int32_t, char*[])
 	sf::Vector2f paddle1_pos = {static_cast<float>(window_width) * 0.1f, static_cast<float>(window_height) * 0.1f};
 
     Paddle paddle1 = Paddle(paddleSize, paddle1_pos, paddleVelocity, paddleColor);
+
+    //Set player config
+    float dropDelay = 0.3f;
+    float delayTime = dropDelay;
+    bool isDropped = false;
 
     sf::Clock clock;
     // Main loop
@@ -112,9 +117,22 @@ int32_t main(int32_t, char*[])
 				paddle1.update(dt, 1);
 		}
 
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){ //player presses down and can drop balls (but they stack on top of each other because they're at exact same x position)
-            auto& object = solver.addObject(object_spawn_position, object_max_radius);
-            solver.setObjectVelocity(object, object_spawn_speed * sf::Vector2f{0, 1});
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){ 
+            if(!isDropped){
+                auto& object = solver.addObject(paddle1.pos, object_max_radius);
+                solver.setObjectVelocity(object, object_spawn_speed * sf::Vector2f{0, 1});
+
+                isDropped = true;
+            }
+        }
+        if(isDropped){
+            if(delayTime > 0){
+                delayTime -= dt;
+            }
+            else{
+                isDropped = false;
+                delayTime = dropDelay;
+            }
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && solver.getObjectsCount() < max_objects_count && clock.getElapsedTime().asSeconds() >= object_spawn_delay) {
