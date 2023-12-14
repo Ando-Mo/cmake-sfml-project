@@ -16,11 +16,11 @@ public:
     {
         // Render constraint
         const sf::Vector3f constraint = solver.getConstraint();
-        sf::CircleShape constraint_background{constraint.z};
+        sf::RectangleShape constraint_background{sf::Vector2f(constraint.z, constraint.z)};
         constraint_background.setOrigin(constraint.z, constraint.z);
         constraint_background.setFillColor(sf::Color::Black);
         constraint_background.setPosition(constraint.x, constraint.y);
-        constraint_background.setPointCount(128);
+        //constraint_background.setPointCount(128);
         m_target.draw(constraint_background);
 
         // Render objects
