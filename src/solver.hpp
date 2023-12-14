@@ -5,6 +5,20 @@
 
 #include "utils/math.hpp"
 
+float min(float one, float two, float three, float four){
+    if(one < two && one < three && one < four){
+        return one;
+    }
+    else if(two < one && two < three && two < four){
+        return two;
+    }
+    else if(three < one && three < two && three < four){
+        return three;
+    }
+    else if(four < one && four < two && four < three){
+        return four;
+    }
+}
 
 struct VerletObject
 {
@@ -226,13 +240,18 @@ private:
             const float distTop = fabs(to_obj.y) - (m_constraint_dimensions.y / 2.0f);
             const float distBottom = (m_constraint_dimensions.y / 2.0f) - fabs(to_obj.y);
 
-
-
-            //if distance is less than the radius, collision! 
+            // const float collideSide = min(distLeft, distRight, distTop, distBottom);
+            //if distance is less than the radius, you are inside the square! 
             if(distance <= obj.radius){
-                const sf::Vector2f n = to_obj / distance;
-                obj.position = m_constraint_center - n /** (which ever side you hit -    obj.radius)*/; //determine how much to push the object back into constraint
+                obj.color = sf::Color::Red;
             }
+            else{
+                obj.color = sf::Color::Blue;
+                sf::Vector2f n = to_obj / distance;
+                //n * (whatever side you hit - radius)
+                obj.position = obj.position - n * (distance - obj.radius); //* (collideSide - obj.radius) determine how much to push the object back into constraint
+            }
+            
         }
     }
 
