@@ -34,7 +34,7 @@ int32_t main(int32_t, char*[])
     Renderer renderer{window};
 
     // Solver configuration
-    solver.setConstraint({static_cast<float>(window_width) * 0.5f, static_cast<float>(window_height) * 0.5f}, 450.0f);
+    solver.setConstraint({static_cast<float>(window_width) * 0.5f, static_cast<float>(window_height) * 0.5f}, {400.0f, 400.0f});
     solver.setSubStepsCount(8);
     solver.setSimulationUpdateRate(frame_rate);
 
@@ -57,7 +57,7 @@ int32_t main(int32_t, char*[])
             }
         }
 
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){ //player presses down and can drop balls (but they stack on top of each other)
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){ //player presses down and can drop balls (but they stack on top of each other because they're at exact same x position)
             auto& object = solver.addObject(object_spawn_position, object_max_radius);
             solver.setObjectVelocity(object, object_spawn_speed * sf::Vector2f{0, 1});
         }

@@ -84,10 +84,10 @@ public:
         m_frame_dt = 1.0f / static_cast<float>(rate);
     }
 
-    void setConstraint(sf::Vector2f position, float radius)
+    void setConstraint(sf::Vector2f position, sf::Vector2f dimensions)
     {
         m_constraint_center = position;
-        m_constraint_radius = radius;
+        m_constraint_dimensions = dimensions;
     }
 
     void setSubStepsCount(uint32_t sub_steps)
@@ -107,9 +107,15 @@ public:
     }
 
     [[nodiscard]]
-    sf::Vector3f getConstraint() const
+    sf::Vector2f getConstraintPos() const
     {
-        return {m_constraint_center.x, m_constraint_center.y, m_constraint_radius};
+        return {m_constraint_center.x, m_constraint_center.y};
+    }
+
+    [[nodiscard]]
+    sf::Vector2f getConstraintDim() const
+    {
+        return {m_constraint_dimensions.x, m_constraint_dimensions.y};
     }
 
     [[nodiscard]]
@@ -135,6 +141,7 @@ private:
     sf::Vector2f              m_gravity            = {0.0f, 1000.0f};
     //constraint defined
     sf::Vector2f              m_constraint_center;
+    sf::Vector2f              m_constraint_dimensions;
     float                     m_constraint_radius  = 100.0f;
     std::vector<VerletObject> m_objects;
     float                     m_time               = 0.0f;
