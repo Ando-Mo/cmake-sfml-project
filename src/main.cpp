@@ -86,7 +86,7 @@ int32_t main(int32_t, char*[])
 
     //FRUIT ATTRIBUTES----------
     //size
-    const float        cherry_r         = 20.0f;
+    const float        cherry_r         = 20.0f;    
     const float        orange_r         = 40.0f;
     const float        apple_r          = 60.0f;
     const float        melon_r          = 80.0f;
@@ -98,6 +98,8 @@ int32_t main(int32_t, char*[])
     const auto         melon_c         = sf::Color::Green;
     const auto         suika_c         = sf::Color::Cyan;
 
+    FruitType chooseFruits[] = {cherry, orange};
+
     //Set paddle config
     auto paddleSize = sf::Vector2f(50, 20);
     auto paddleVelocity = sf::Vector2f(200, 0);
@@ -107,6 +109,10 @@ int32_t main(int32_t, char*[])
     Paddle paddle1 = Paddle(paddleSize, paddle1_pos, paddleVelocity, paddleColor);
 
     //Set player config
+    FruitType curFruit = cherry;
+    float object_radius;
+    auto object_color = sf::Color::White;
+
     float dropDelay = 0.6f; //amount of time between each drop
     float delayTime = dropDelay; //temp variable that iterates down
     bool isDropped = false; //did the player press the drop button or not?
@@ -128,6 +134,8 @@ int32_t main(int32_t, char*[])
         dt_time = clock.restart();
 		dt = dt_time.asSeconds();
 
+        srand((unsigned) time(NULL));
+
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) /*&& paddle1.pos.y > 140*/) { 
 			paddle1.update(dt, -1);
 		}
@@ -137,8 +145,22 @@ int32_t main(int32_t, char*[])
 
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){ 
             if(!isDropped){
+                //randomly choose one of the first 2 fruits to drop
+                curFruit = chooseFruits[rand() % sizeof(chooseFruits)];
+                //set the object to the fruit attributes
+                
+                if(curFruit == cherry){
+                    object_radius = cherry_r;
+                    object_color = cherry_c;
+                }
+                else if(curFruit == orange){
+                    object_radius = orange_r;
+                    object_color = orange_c;
+                }
+
                 auto& object = solver.addObject(paddle1.pos, object_radius);
                 solver.setObjectVelocity(object, object_spawn_speed * sf::Vector2f{0, 1});
+                object.color = object_color;
 
                 isDropped = true;
             }

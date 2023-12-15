@@ -247,10 +247,10 @@ private:
             // const float collideSide = min(distLeft, distRight, distTop, distBottom);
             //if distance is less than the radius, you are inside the square! 
             if(distance <= obj.radius){
-                obj.color = sf::Color::Red;
+                //obj.color = sf::Color::Red;
             }
             else{
-                obj.color = sf::Color::Blue;
+                //obj.color = sf::Color::Blue;
                 sf::Vector2f n = to_obj / distance;
                 //n * (whatever side you hit - radius)
                 obj.position = obj.position - n * (distance - obj.radius); //* the new position is the normal vector, reversed, multiplied by the overlap of the circle onto the square
