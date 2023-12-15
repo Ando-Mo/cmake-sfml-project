@@ -57,81 +57,82 @@ public:
 //     suika
 // };
 
-//FRUIT ATTRIBUTES----------
-    //size
-    const float        cherry_r         = 10.0f;    
-    const float        strawberry_r     = 20.0f;    
-    const float        grape_r          = 25.0f;    
-    const float        tangerine_r      = 30.0f;    
-    const float        orange_r         = 40.0f;
-    const float        apple_r          = 60.0f;
-    const float        pear_r           = 65.0f;
-    const float        peach_r          = 70.0f;
-    const float        pineapple_r      = 75.0f;
-    const float        melon_r          = 80.0f;
-    const float        suika_r          = 100.0f;
+// //FRUIT ATTRIBUTES----------
+//     //size
+//     const float        cherry_r         = 10.0f;    
+//     const float        strawberry_r     = 20.0f;    
+//     const float        grape_r          = 25.0f;    
+//     const float        tangerine_r      = 30.0f;    
+//     const float        orange_r         = 40.0f;
+//     const float        apple_r          = 60.0f;
+//     const float        pear_r           = 65.0f;
+//     const float        peach_r          = 70.0f;
+//     const float        pineapple_r      = 75.0f;
+//     const float        melon_r          = 80.0f;
+//     const float        suika_r          = 100.0f;
 
-    //color
-    const sf::Color          cherry_c         = sf::Color::Color(255, 0, 0); //red
-    const sf::Color          strawberry_c         = sf::Color::Color(255, 0, 0); //red
-    const sf::Color          grape_c         = sf::Color::Color(255, 0, 0); //red
-    const sf::Color          tangerine_c         = sf::Color::Color(255, 0, 0); //red
-    const sf::Color          orange_c         = sf::Color::Color(255, 165, 0); //orange
-    const sf::Color          apple_c          = sf::Color::Red;
-    const sf::Color          pear_c          = sf::Color::Red;
-    const sf::Color          peach_c          = sf::Color::Red;
-    const sf::Color          pineapple_c          = sf::Color::Red;
-    const sf::Color          melon_c          = sf::Color::Green;
-    const sf::Color          suika_c          = sf::Color::Cyan;
+//     //color
+//     const sf::Color          cherry_c         = sf::Color::Color(255, 0, 0); //red
+//     const sf::Color          strawberry_c         = sf::Color::Color(255, 0, 0); //red
+//     const sf::Color          grape_c         = sf::Color::Color(255, 0, 0); //red
+//     const sf::Color          tangerine_c         = sf::Color::Color(255, 0, 0); //red
+//     const sf::Color          orange_c         = sf::Color::Color(255, 165, 0); //orange
+//     const sf::Color          apple_c          = sf::Color::Red;
+//     const sf::Color          pear_c          = sf::Color::Red;
+//     const sf::Color          peach_c          = sf::Color::Red;
+//     const sf::Color          pineapple_c          = sf::Color::Red;
+//     const sf::Color          melon_c          = sf::Color::Green;
+//     const sf::Color          suika_c          = sf::Color::Cyan;
 
-void assignFruit(FruitType type, float& radius, sf::Color& color){
-        if(type == cherry){
+// void assignFruit(FruitType type, float& radius, sf::Color& color){
+//         if(type == cherry){
             
-            radius = cherry_r;
-            color = cherry_c;
-            std::cout << "color is: " << (int) cherry_c.r << " " << (int) cherry_c.g << " "<< (int) cherry_c.b << " " << (int) cherry_c.a <<std::endl;
-        }
-        else if(type == strawberry){
-            radius = strawberry_r;
-            color = strawberry_c;
-        }
-        else if(type == grape){
-            radius = grape_r;
-            color = grape_c;
-        }
-        else if(type == tangerine){
-            radius = tangerine_r;
-            color = tangerine_c;
-        }
-        else if(type == orange){
-            radius = orange_r;
-            color = orange_c;
-        }
-        else if(type == apple){
-            radius = apple_r;
-            color = apple_c;
-        }
-        else if(type == pear){
-            radius = pear_r;
-            color = pear_c;
-        }
-        else if(type == peach){
-            radius = peach_r;
-            color = peach_c;
-        }
-        else if(type == pineapple){
-            radius = pineapple_r;
-            color = pineapple_c;
-        }
-        else if(type == melon){
-            radius = melon_r;
-            color = melon_c;
-        }
-        else if(type == suika){
-            radius = suika_r;
-            color = suika_c;
-        }
-    }
+//             radius = cherry_r;
+//             color = cherry_c;
+//             std::cout << "color is: " << (int) cherry_c.r << " " << (int) cherry_c.g << " "<< (int) cherry_c.b << " " << (int) cherry_c.a <<std::endl;
+//         }
+//         else if(type == strawberry){
+//             radius = strawberry_r;
+//             color = strawberry_c;
+//         }
+//         else if(type == grape){
+//             radius = grape_r;
+//             color = grape_c;
+//         }
+//         else if(type == tangerine){
+//             radius = tangerine_r;
+//             color = tangerine_c;
+//         }
+//         else if(type == orange){
+//             radius = orange_r;
+//             color = orange_c;
+//         }
+//         else if(type == apple){
+//             radius = apple_r;
+//             color = apple_c;
+//         }
+//         else if(type == pear){
+//             radius = pear_r;
+//             color = pear_c;
+//         }
+//         else if(type == peach){
+//             radius = peach_r;
+//             color = peach_c;
+//         }
+//         else if(type == pineapple){
+//             radius = pineapple_r;
+//             color = pineapple_c;
+//         }
+//         else if(type == melon){
+//             radius = melon_r;
+//             color = melon_c;
+//         }
+//         else if(type == suika){
+//             radius = suika_r;
+//             color = suika_c;
+//         }
+//     }
+
 
 int32_t main(int32_t, char*[])
 {
@@ -211,6 +212,7 @@ int32_t main(int32_t, char*[])
                 auto& object = solver.addObject(paddle1.pos, object_radius);
                 solver.setObjectVelocity(object, object_spawn_speed * sf::Vector2f{0, 1});
                 object.color = object_color;
+                object.type = curFruit;
 
                 isDropped = true;
             }
@@ -222,10 +224,12 @@ int32_t main(int32_t, char*[])
             else{ //once the delay is over: 
                 
                 //curFruit increments up the ChooseFruits list until it hits the end, then loops back to the beginning
-                curFruit = (curFruit == sizeof(chooseFruits)/sizeof(*chooseFruits) - 1) ? chooseFruits[0] : chooseFruits[curFruit + 1];
+                //curFruit = (curFruit == sizeof(chooseFruits)/sizeof(*chooseFruits) - 1) ? chooseFruits[0] : chooseFruits[curFruit + 1];
+                curFruit = cherry;
 
                 //set the object to the fruit attributes <------ turn this into a function so we can call it on collision
                 assignFruit(curFruit, object_radius, object_color); 
+                
                 //reset the delay
                 isDropped = false;
                 delayTime = dropDelay;
