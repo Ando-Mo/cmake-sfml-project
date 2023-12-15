@@ -5,6 +5,20 @@
 
 #include "utils/math.hpp"
 
+enum FruitType{
+    cherry, 
+    strawberry, 
+    grape, 
+    tangerine, 
+    orange, 
+    apple, 
+    pear, 
+    peach, 
+    pineapple, 
+    melon, 
+    suika
+};
+
 float min(float one, float two, float three, float four){
     if(one < two && one < three && one < four){
         return one;
@@ -25,6 +39,7 @@ struct VerletObject
     sf::Vector2f position;
     sf::Vector2f position_last;
     sf::Vector2f acceleration;
+    FruitType type;
 
     float radius = 10.0f;
     sf::Color color = sf::Color::White;
