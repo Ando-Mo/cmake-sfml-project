@@ -102,6 +102,7 @@ struct VerletObject
     sf::Vector2f position_last;
     sf::Vector2f acceleration;
     FruitType type;
+    bool toDelete = false;
 
     float radius = 10.0f;
     sf::Color color = sf::Color::White;
@@ -145,6 +146,7 @@ struct VerletObject
     {
         return (position - position_last) / dt;
     }
+    
 };
 
 
@@ -157,6 +159,18 @@ public:
     {
         return m_objects.emplace_back(position, radius);
     }
+
+    bool shouldDelete(VerletObject& obj){
+        return obj.toDelete;
+    }
+
+    void removeObjects()
+{
+    auto it = std::remove_if(m_objects.begin(), m_objects.end(), [this](VerletObject& obj) {
+        return shouldDelete(obj);
+    });
+    //m_objects.erase(it, m_objects.end());
+}
 
     void update()
     {
@@ -259,37 +273,42 @@ private:
                 const float        min_dist = object_1.radius + object_2.radius;
                 // Check overlapping
                 if (dist2 < min_dist * min_dist) {
-                    const float        dist  = sqrt(dist2);
-                    const sf::Vector2f n     = v / dist;
-                    const float mass_ratio_1 = object_1.radius / (object_1.radius + object_2.radius);
-                    const float mass_ratio_2 = object_2.radius / (object_1.radius + object_2.radius);
-                    const float delta        = 0.5f * response_coef * (dist - min_dist);
-                    
-                    //Update color <--- this actually works but is getting overridden
-                    object_1.color = sf::Color::Yellow;
-                    object_2.color = sf::Color::Yellow;
-
-                    // Update positions
-                    object_1.position -= n * (mass_ratio_2 * delta);
-                    object_2.position += n * (mass_ratio_1 * delta);
-                    
                     if(object_1.type == object_2.type && object_1.type != suika){ //if two of the same collide
-                    //instantiate a new object at middle position
-                    sf::Vector2f new_pos = (object_1.position + object_2.position)/2.f;
-                    float new_rad; 
-                    sf::Color new_col; 
-                    FruitType new_type = FruitType(object_1.type + 1);
-                    assignFruit(new_type, new_rad, new_col);
+                        
+                        std::cout << "incoming objects are type: " << object_1.type << std::endl;
 
-                    std::cout << "type is " << new_type 
-                    << "  color is: " << new_col.r << new_col.g << new_col.b
-                    << "  radius is: "<< new_rad << std::endl;
+                        //instantiate a new object at middle position
+                        sf::Vector2f new_pos = (object_1.position + object_2.position)/2.f;
+                        float new_rad; 
+                        sf::Color new_col; 
+                        FruitType new_type = FruitType(object_1.type + 1);
+                        assignFruit(new_type, new_rad, new_col);
 
-                    auto& object = addObject(new_pos, new_rad);
-                    object.color = new_col;
-                    object.type = new_type;
+                        std::cout << "new type is " << new_type << std::endl;
 
-                    //setObjectVelocity(object, object_spawn_speed * sf::Vector2f{0, 1});
+                        auto& object = addObject(new_pos, new_rad);
+                        object.color = new_col;
+                        object.type = new_type;
+
+                        //setObjectVelocity(object, object_spawn_speed * sf::Vector2f{0, 1});
+
+                        //Delete the two objects that caused the collision
+                        object_1.toDelete = true;
+                        object_2.toDelete = true;
+                        removeObjects();                     
+                    }
+                    else{
+                        const float        dist  = sqrt(dist2);
+                        const sf::Vector2f n     = v / dist;
+                        const float mass_ratio_1 = object_1.radius / (object_1.radius + object_2.radius);
+                        const float mass_ratio_2 = object_2.radius / (object_1.radius + object_2.radius);
+                        const float delta        = 0.5f * response_coef * (dist - min_dist);
+                    
+
+                        // Update positions
+                        object_1.position -= n * (mass_ratio_2 * delta);
+                        object_2.position += n * (mass_ratio_1 * delta);
+                    
                     }
                 }
                 

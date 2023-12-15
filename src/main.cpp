@@ -207,6 +207,7 @@ int32_t main(int32_t, char*[])
 			paddle1.update(dt, 1);
 		}
 
+
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){ 
             if(!isDropped){
                 auto& object = solver.addObject(paddle1.pos, object_radius);
@@ -214,6 +215,9 @@ int32_t main(int32_t, char*[])
                 object.color = object_color;
                 object.type = curFruit;
 
+                //test if the delete function works
+                object.toDelete = true;
+                solver.removeObjects();
                 isDropped = true;
             }
         }
