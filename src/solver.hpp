@@ -373,26 +373,22 @@ private:
             //float distance = sqrt( (distX*distX) + (distY*distY) );
             float distance = sqrt(to_obj.x * to_obj.x + to_obj.y * to_obj.y);
 
-            const float distLeft = fabs(to_obj.x) - (m_constraint_dimensions.x / 2.0f);
-            const float distRight = (m_constraint_dimensions.x / 2.0f) - fabs(to_obj.x);
-            const float distTop = fabs(to_obj.y) - (m_constraint_dimensions.y / 2.0f);
-            const float distBottom = (m_constraint_dimensions.y / 2.0f) - fabs(to_obj.y);
-
             // const float collideSide = min(distLeft, distRight, distTop, distBottom);
             //if distance is less than the radius, you are inside the square! 
             if(distance <= obj.radius){
                 //obj.color = sf::Color::Red;
             }
             else{
-                
+
                 if (testY == m_constraint_center.y){ //if you hit the top edge
                     //make end text display
-                    obj.color = sf::Color::Blue;
+                    //obj.color = sf::Color::Blue;
                     GameOver = true;
                 }
                 sf::Vector2f n = to_obj / distance;
                 //n * (whatever side you hit - radius)
-                obj.position = obj.position - n * (distance - obj.radius); //* the new position is the normal vector, reversed, multiplied by the overlap of the circle onto the square
+                // obj.position = obj.position - n * (distance - obj.radius); //* the new position is the normal vector, reversed, multiplied by the overlap of the circle onto the square
+                obj.position = obj.position - n * (distance - obj.radius);
             }
         }
     }

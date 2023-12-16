@@ -133,6 +133,10 @@ public:
 //         }
 //     }
 
+enum gameState{
+    Game, 
+    Game_Over,
+};
 
 int32_t main(int32_t, char*[])
 {
@@ -151,7 +155,7 @@ int32_t main(int32_t, char*[])
     Renderer renderer{window};
 
     // Solver configuration
-    solver.setConstraint({static_cast<float>(window_width) * 0.2f, static_cast<float>(window_height) * 0.2f}, {600.0f, 600.0f});
+    solver.setConstraint({static_cast<float>(window_width) * 0.2f, static_cast<float>(window_height) * 0.2f}, {400.0f, 400.0f});
     solver.setSubStepsCount(8);
     solver.setSimulationUpdateRate(frame_rate);
 
@@ -244,8 +248,10 @@ int32_t main(int32_t, char*[])
             else{ //once the delay is over: 
                 
                 //curFruit increments up the ChooseFruits list until it hits the end, then loops back to the beginning
+                int rand = std::rand()%sizeof(chooseFruits)/sizeof(*chooseFruits);
                 //curFruit = (curFruit == sizeof(chooseFruits)/sizeof(*chooseFruits) - 1) ? chooseFruits[0] : chooseFruits[curFruit + 1];
-                curFruit = cherry;
+                curFruit = (rand > sizeof(chooseFruits)/sizeof(*chooseFruits) - 1) ? chooseFruits[0] : chooseFruits[rand];
+                //curFruit = cherry;
 
                 //set the object to the fruit attributes <------ turn this into a function so we can call it on collision
                 assignFruit(curFruit, object_radius, object_color); 
