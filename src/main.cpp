@@ -155,7 +155,7 @@ int32_t main(int32_t, char*[])
     Renderer renderer{window};
 
     // Solver configuration
-    solver.setConstraint({static_cast<float>(window_width) * 0.2f, static_cast<float>(window_height) * 0.2f}, {400.0f, 400.0f});
+    solver.setConstraint({static_cast<float>(window_width) * 0.2f, static_cast<float>(window_height) * 0.2f}, {500.0f, 500.0f});
     solver.setSubStepsCount(8);
     solver.setSimulationUpdateRate(frame_rate);
 
@@ -221,10 +221,10 @@ int32_t main(int32_t, char*[])
 
         srand((unsigned) time(NULL));
         if(curState == Game){
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) /*&& paddle1.pos.y > 140*/) { 
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && paddle1.pos.x > static_cast<float>(window_width) * 0.2f){ 
 			    paddle1.update(dt, -1);
 		    }
-		    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)/*&& paddle1.pos.y < 680*/) {
+		    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)&& paddle1.pos.x < (static_cast<float>(window_height) * 0.2f + 500.f)) {
 			    paddle1.update(dt, 1);
 		    }
 
