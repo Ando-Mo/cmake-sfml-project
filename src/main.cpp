@@ -216,8 +216,8 @@ int32_t main(int32_t, char*[])
                 object.type = curFruit;
 
                 //test if the delete function works
-                object.toDelete = true;
-                solver.removeObjects();
+                // object.toDelete = true;
+                // solver.removeObjects();
                 isDropped = true;
             }
         }

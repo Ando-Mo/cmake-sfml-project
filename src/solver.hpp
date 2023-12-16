@@ -103,7 +103,6 @@ struct VerletObject
     sf::Vector2f acceleration;
     FruitType type;
     bool toDelete = false;
-
     float radius = 10.0f;
     sf::Color color = sf::Color::White;
 
@@ -114,6 +113,17 @@ struct VerletObject
         acceleration{0.0f, 0.0f},
         radius{radius_}{}
 
+    bool operator==(const VerletObject& other) const{
+        return(
+            position == other.position &&
+            position_last == other.position_last &&
+            acceleration == other.acceleration &&
+            type == other.type &&
+            toDelete == other.toDelete &&
+            radius == other.radius &&
+            color == other.color
+        );
+    }
     void update(float dt)
     {
         // Compute how much we moved
@@ -164,12 +174,12 @@ public:
         return obj.toDelete;
     }
 
-    void removeObjects()
+void removeObjects()
 {
     auto it = std::remove_if(m_objects.begin(), m_objects.end(), [this](VerletObject& obj) {
-        return shouldDelete(obj);
+        return obj.toDelete;
     });
-    //m_objects.erase(it, m_objects.end());
+    m_objects.erase(it, m_objects.end());
 }
 
     void update()
@@ -276,26 +286,29 @@ private:
                     if(object_1.type == object_2.type && object_1.type != suika){ //if two of the same collide
                         
                         std::cout << "incoming objects are type: " << object_1.type << std::endl;
-
-                        //instantiate a new object at middle position
+                        //collect data from collided objects
                         sf::Vector2f new_pos = (object_1.position + object_2.position)/2.f;
                         float new_rad; 
                         sf::Color new_col; 
                         FruitType new_type = FruitType(object_1.type + 1);
                         assignFruit(new_type, new_rad, new_col);
 
+                        //Delete the two objects that caused the collision
+                        //m_objects.erase(object_1);
+
+                        object_1.toDelete = true;                        
+                        object_2.toDelete = true; //the vector indexing error shows up when I try to delete the 2nd object
+
                         std::cout << "new type is " << new_type << std::endl;
 
+                        //instantiate a new object at middle position
                         auto& object = addObject(new_pos, new_rad);
                         object.color = new_col;
                         object.type = new_type;
 
                         //setObjectVelocity(object, object_spawn_speed * sf::Vector2f{0, 1});
 
-                        //Delete the two objects that caused the collision
-                        object_1.toDelete = true;
-                        object_2.toDelete = true;
-                        removeObjects();                     
+                                           
                     }
                     else{
                         const float        dist  = sqrt(dist2);
@@ -314,6 +327,7 @@ private:
                 
             } 
         }
+        removeObjects(); 
     }
 
     void applyConstraint()
