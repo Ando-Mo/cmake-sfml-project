@@ -37,17 +37,17 @@ bool GameOver = false;
     const float        suika_r          = 100.0f;
 
     //color
-    const sf::Color          cherry_c         = sf::Color::Color(255, 0, 0); //red
-    const sf::Color          strawberry_c         = sf::Color::Color(255, 0, 0); //red
-    const sf::Color          grape_c         = sf::Color::Color(255, 0, 0); //red
-    const sf::Color          tangerine_c         = sf::Color::Color(255, 0, 0); //red
-    const sf::Color          orange_c         = sf::Color::Color(255, 165, 0); //orange
-    const sf::Color          apple_c          = sf::Color::Red;
-    const sf::Color          pear_c          = sf::Color::Red;
-    const sf::Color          peach_c          = sf::Color::Red;
-    const sf::Color          pineapple_c          = sf::Color::Red;
-    const sf::Color          melon_c          = sf::Color::Green;
-    const sf::Color          suika_c          = sf::Color::Cyan;
+    const sf::Color          cherry_c        = sf::Color::Color(255, 25, 102); //hot pink
+    const sf::Color          strawberry_c    = sf::Color::Color(255, 85, 51); //pinkish red
+    const sf::Color          grape_c         = sf::Color::Color(128, 0, 255); //violet 
+    const sf::Color          tangerine_c     = sf::Color::Color(255, 187, 51); //light orange
+    const sf::Color          orange_c         = sf::Color::Color(255, 128, 0); //orange
+    const sf::Color          apple_c          = sf::Color::Color(255,0,0); //red
+    const sf::Color          pear_c          = sf::Color::Color(221, 255, 51); //pear green
+    const sf::Color          peach_c          = sf::Color::Color(255,179,179); //faded pink 
+    const sf::Color          pineapple_c          = sf::Color::Color(255,255,77); //light yellow
+    const sf::Color          melon_c          = sf::Color::Color(153,255,102);//bluer green
+    const sf::Color          suika_c          = sf::Color::Color(0, 102, 34); //dark green
 
 void assignFruit(FruitType type, float& radius, sf::Color& color){
         if(type == cherry){
