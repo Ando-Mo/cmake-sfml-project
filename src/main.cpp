@@ -189,6 +189,7 @@ int32_t main(int32_t, char*[])
     sf::Clock clock;
     sf::Time dt_time;
     float dt;
+    gameState curState = Game;
     
     sf::Text endGameText;
 
@@ -198,11 +199,11 @@ int32_t main(int32_t, char*[])
     }
     endGameText.setFont(font);
 
-    endGameText.setString("GAME OVER");
+    endGameText.setString("GAME OVER: Press R to Restart");
 
-    endGameText.setCharacterSize(90);
+    endGameText.setCharacterSize(50);
 
-	endGameText.setPosition(static_cast<float>(window_width) * 0.23f, static_cast<float>(window_height) * 0.4f); //the scores are placed on the opposite side of their respective goal 
+	endGameText.setPosition(static_cast<float>(window_width) * 0.1f, static_cast<float>(window_height) * 0.4f); //the scores are placed on the opposite side of their respective goal 
 
     endGameText.setFillColor(sf::Color::Blue);
 
@@ -219,13 +220,13 @@ int32_t main(int32_t, char*[])
 		dt = dt_time.asSeconds();
 
         srand((unsigned) time(NULL));
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) /*&& paddle1.pos.y > 140*/) { 
-			paddle1.update(dt, -1);
-		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)/*&& paddle1.pos.y < 680*/) {
-			paddle1.update(dt, 1);
-		}
+        if(curState == Game){
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) /*&& paddle1.pos.y > 140*/) { 
+			    paddle1.update(dt, -1);
+		    }
+		    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)/*&& paddle1.pos.y < 680*/) {
+			    paddle1.update(dt, 1);
+		    }
 
 
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down)){ 
@@ -261,23 +262,21 @@ int32_t main(int32_t, char*[])
                 delayTime = dropDelay;
             }
         }
-
-        // if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && solver.getObjectsCount() < max_objects_count && clock.getElapsedTime().asSeconds() >= object_spawn_delay) {
-        //     clock.restart();
-        //     auto&       object = solver.addObject(object_spawn_position, RNGf::getRange(object_min_radius, object_max_radius)); //spawn object
-        //     const float t      = solver.getTime();
-        //     const float angle  = max_angle * sin(t) + Math::PI * 0.5f; //angle based on sin wave along time t
-        //     solver.setObjectVelocity(object, object_spawn_speed * sf::Vector2f{cos(angle), sin(angle)});
-        //     object.color = getRainbow(t);
-        // }
-
+    }
         
+        if(curState == Game_Over){
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) /*&& paddle1.pos.y > 140*/) { 
+                GameOver = false;
+                curState = Game;
+            }
+        }
 
         solver.update();
         window.clear(sf::Color::White);
         renderer.render(solver);
         window.draw(paddle1.getShape());
         if(GameOver){
+            curState = Game_Over;
             solver.removeAllObjects();
             window.draw(endGameText);
         }
