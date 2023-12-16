@@ -18,6 +18,10 @@ enum FruitType{
     suika
 };
 
+//GLOBALS-----------------------------------------------
+
+bool GameOver = false;
+
 //FRUIT ATTRIBUTES----------
     //size
     const float        cherry_r         = 10.0f;    
@@ -170,17 +174,17 @@ public:
         return m_objects.emplace_back(position, radius);
     }
 
-    bool shouldDelete(VerletObject& obj){
-        return obj.toDelete;
+    void removeAllObjects(){
+        m_objects.clear();
     }
 
-void removeObjects()
-{
-    auto it = std::remove_if(m_objects.begin(), m_objects.end(), [this](VerletObject& obj) {
-        return obj.toDelete;
-    });
-    m_objects.erase(it, m_objects.end());
-}
+    void removeObjects()
+    {
+        auto it = std::remove_if(m_objects.begin(), m_objects.end(), [this](VerletObject& obj) {
+            return obj.toDelete;
+        });
+        m_objects.erase(it, m_objects.end());
+    }
 
     void update()
     {
@@ -384,6 +388,7 @@ private:
                 if (testY == m_constraint_center.y){ //if you hit the top edge
                     //make end text display
                     obj.color = sf::Color::Blue;
+                    GameOver = true;
                 }
                 sf::Vector2f n = to_obj / distance;
                 //n * (whatever side you hit - radius)

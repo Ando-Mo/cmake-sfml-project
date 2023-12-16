@@ -151,7 +151,7 @@ int32_t main(int32_t, char*[])
     Renderer renderer{window};
 
     // Solver configuration
-    solver.setConstraint({static_cast<float>(window_width) * 0.1f, static_cast<float>(window_height) * 0.1f}, {600.0f, 600.0f});
+    solver.setConstraint({static_cast<float>(window_width) * 0.2f, static_cast<float>(window_height) * 0.2f}, {600.0f, 600.0f});
     solver.setSubStepsCount(8);
     solver.setSimulationUpdateRate(frame_rate);
 
@@ -167,7 +167,7 @@ int32_t main(int32_t, char*[])
     auto paddleSize = sf::Vector2f(50, 20);
     auto paddleVelocity = sf::Vector2f(200, 0);
     auto paddleColor = sf::Color::Red;
-	sf::Vector2f paddle1_pos = {static_cast<float>(window_width) * 0.1f, static_cast<float>(window_height) * 0.1f};
+	sf::Vector2f paddle1_pos = {static_cast<float>(window_width) * 0.5f, static_cast<float>(window_height) * 0.2f};
 
     Paddle paddle1 = Paddle(paddleSize, paddle1_pos, paddleVelocity, paddleColor);
 
@@ -185,6 +185,22 @@ int32_t main(int32_t, char*[])
     sf::Clock clock;
     sf::Time dt_time;
     float dt;
+    
+    sf::Text endGameText;
+
+    sf::Font font;
+    if(!font.loadFromFile("../../../ARIAL.TTF")){
+        std::cout << "dang that's crazy" << std::endl;
+    }
+    endGameText.setFont(font);
+
+    endGameText.setString("GAME OVER");
+
+    endGameText.setCharacterSize(90);
+
+	endGameText.setPosition(static_cast<float>(window_width) * 0.23f, static_cast<float>(window_height) * 0.4f); //the scores are placed on the opposite side of their respective goal 
+
+    endGameText.setFillColor(sf::Color::Blue);
 
     // Main loop
     while (window.isOpen()) {
@@ -249,10 +265,16 @@ int32_t main(int32_t, char*[])
         //     object.color = getRainbow(t);
         // }
 
+        
+
         solver.update();
         window.clear(sf::Color::White);
         renderer.render(solver);
         window.draw(paddle1.getShape());
+        if(GameOver){
+            solver.removeAllObjects();
+            window.draw(endGameText);
+        }
 		window.display();
     }
 
