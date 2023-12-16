@@ -21,6 +21,7 @@ enum FruitType{
 //GLOBALS-----------------------------------------------
 
 bool GameOver = false;
+bool GameWin = false;
 
 //FRUIT ATTRIBUTES----------
     //size
@@ -309,6 +310,10 @@ private:
                         auto& object = addObject(new_pos, new_rad);
                         object.color = new_col;
                         object.type = new_type;
+
+                        if(object.type == suika){
+                            GameWin = true;
+                        }
 
                         //setObjectVelocity(object, object_spawn_speed * sf::Vector2f{0, 1});
 

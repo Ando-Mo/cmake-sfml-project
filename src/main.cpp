@@ -136,6 +136,7 @@ public:
 enum gameState{
     Game, 
     Game_Over,
+    Game_Win
 };
 
 int32_t main(int32_t, char*[])
@@ -264,9 +265,13 @@ int32_t main(int32_t, char*[])
         }
     }
         
-        if(curState == Game_Over){
+        if(curState == Game_Over || curState == Game_Win){
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) /*&& paddle1.pos.y > 140*/) { 
                 GameOver = false;
+                GameWin = false;
+                if(curState == Game_Win){
+                    solver.removeAllObjects();
+                }
                 curState = Game;
             }
         }
@@ -278,7 +283,13 @@ int32_t main(int32_t, char*[])
         if(GameOver){
             curState = Game_Over;
             solver.removeAllObjects();
+            endGameText.setString("GAME OVER: Press R to Restart");
             window.draw(endGameText);
+        }
+        if(GameWin){
+            curState = Game_Win;
+            endGameText.setString("YOU WIN!! Press R to Restart");
+            window.draw(endGameText); 
         }
 		window.display();
     }
