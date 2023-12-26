@@ -1,12 +1,21 @@
-Press Enter to get past the first screen. 
+Instructions:
+- Press Left and Right to move your spawner. 
+- Press Down to drop a fruit (this will randomly select 1/5 first fruits, but will favor cherries). 
 
-Press 1 to select 1P Mode, which will let you face off against the CPU controller. 
-Press 2 to select 2P Mode, which will let you control both paddles. 
+- If you manage to create a watermelon, you win! 
+- If any of your fruits are pushed out of the box, then you will cause a Game Over! 
 
-Paddles can be moved up and down. 
-This is done with W and A for P1 (the left paddle), 
-and Up and Down for P2 (the right paddle). 
+- Pressing R after losing or winning will allow you to restart and play again. 
 
-Press P to pause the game, and P again to resume the game. 
-
-Please excuse the hideous colors. I thought it would be funny.
+For your information, here is the list of fruits: 
+- cherry, 
+- strawberry, 
+- grape, 
+- tangerine, 
+- orange, 
+- apple, 
+- pear, 
+- peach, 
+- pineapple, 
+- melon, 
+- watermelon (suika)
